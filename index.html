@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+    <main>
+        <h1>Something Important?</h1>
+        <div class="addingSection">
+            <input id="input-task" class="item1">
+            <button id="add-task-button" class="item2" >Add Task</button>
+        </div>
+        <ul id="task-list">
+            <!--<li><input type="checkbox"><span class="task">Something to do</span><button class="delete-btn" onclick="removeListTag()">X</button></li>
+            <li><input type="checkbox"><span class="task">Code To-Do List</span><button class="delete-btn" onclick="removeListTag()">X</button></li>
+            <li><input type="checkbox"><span class="task">Create Project Repo</span><button class="delete-btn" onclick="removeListTag()">X</button></li>-->
+        </ul>
+    </main>
+</body>
+<script>
+    document.getElementById("add-task-button").addEventListener("click", function setUp() {
+        addingElement (document.getElementById("input-task").value);
+        checkCheckbox();
+        addToStorage()
+    });
+    function addingElement (textValue) {
+        /* Setting and assigning variables */
+        let listTag = document.createElement("li");
+        let checkboxTag = document.createElement("input");
+        checkboxTag.setAttribute("type","checkbox");
+        let spanTag = document.createElement("span");
+        let text = document.createTextNode(textValue);
+        spanTag.appendChild(text);
+        spanTag.setAttribute("class","task");
+        let buttonTag = document.createElement("button");
+        let x = document.createTextNode("X");
+        buttonTag.appendChild(x);
+        buttonTag.setAttribute("class","delete-btn");
+        buttonTag.setAttribute("onclick","removeListTag()");
+        listTag.appendChild(checkboxTag);
+        listTag.appendChild(spanTag);
+        listTag.appendChild(buttonTag);
+        /* Appending listTag to ulList */
+        let ulList = document.getElementById("task-list");
+        ulList.appendChild(listTag);
+        /* Clearing input */
+        document.getElementById("input-task").value = "";
+    }
+    function removeListTag() {
+        let elements = document.getElementsByClassName("delete-btn");
+        let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
+        for (let i = 0; i < elements.length; i++){
+            elements[i].addEventListener("click", function () {
+                this.parentElement.remove();
+
+            });
+            /*taskList.splice(i, 1);
+            console.log(taskList);*/
+        }
+        /*localStorage.setItem("tasks", JSON.stringify(taskList));*/
+    }
+    function checkCheckbox() {
+        let elements = document.getElementsByTagName("input");
+        for (let i = 1; i < elements.length; i++){
+            elements[i].addEventListener("click", function () {
+                if(elements[i].checked === true) {
+                    document.getElementsByClassName("task")[i-1].style.textDecoration = "line-through";
+                }
+                else {
+                    document.getElementsByClassName("task")[i-1].style.textDecoration = "";
+                }
+            });
+        }
+    }
+
+    function addToStorage() {
+        let taskList = [];
+        let elements = document.getElementsByTagName("input");
+        for (let i = 1; i < elements.length; i++){
+            taskList.push(document.getElementsByClassName("task")[i-1].innerText);
+        }
+        /*console.log(taskList);*/
+        localStorage.setItem("tasks", JSON.stringify(taskList))
+    }
+
+    function loadList() {
+        let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
+        let elements = taskList.length;
+        console.log(elements);
+        console.log(taskList);
+        for (let i = 0; i < elements; i++){
+            addingElement (taskList[i]);
+            checkCheckbox();
+            /*let listTag = document.createElement("li");
+            let checkboxTag = document.createElement("input");
+            checkboxTag.setAttribute("type","checkbox");
+            let spanTag = document.createElement("span");
+            let text = document.createTextNode(taskList[i]);
+            spanTag.appendChild(text);
+            spanTag.setAttribute("class","task");
+            let buttonTag = document.createElement("button");
+            let x = document.createTextNode("X");
+            buttonTag.appendChild(x);
+            buttonTag.setAttribute("class","delete-btn");
+            buttonTag.setAttribute("onclick","removeListTag()");
+            listTag.appendChild(checkboxTag);
+            listTag.appendChild(spanTag);
+            listTag.appendChild(buttonTag);*/
+            /* Appending listTag to ulList */
+            //let ulList = document.getElementById("task-list");
+            //ulList.appendChild(listTag);
+            /* Clearing input */
+            //document.getElementById("input-task").value = "";
+        }
+    }
+
+    loadList();
+</script>
+</html>
